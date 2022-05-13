@@ -25,8 +25,8 @@ async def hikari_on_guild_available (event: hikari.GuildAvailableEvent):
     vchannel: hikari.GuildVoiceChannel = guild.get_channel( HIKARI_CHANNEL_VOICE_ID )
     if not vchannel:
         return
+    voice = await Voicebox.connect( BOT, guild.id, vchannel.id )
     while True:
-        voice = await Voicebox.connect( BOT, guild.id, vchannel.id )
         voice_src = await ytdl( HIKARI_YOUTUBE_URL )
         voice_trk = await voice.play_only_source( voice_src )
         metadata = voice_trk.metadata
@@ -34,7 +34,6 @@ async def hikari_on_guild_available (event: hikari.GuildAvailableEvent):
         duration = metadata.duration
         LOGGER.info( f"Track duration: {duration}" )
         await asyncio.sleep( duration )
-        await voice.disconnect()
 
 
 BOT.run()
